@@ -17,7 +17,8 @@ cabal-version:       >=1.10
 
 executable gentodo
   main-is:             Main.hs
-  -- other-modules:       
+  other-modules:       Parse
+                       Types
   -- other-extensions:    
   build-depends:       base >=4.9 && <4.12
                      , parsec
