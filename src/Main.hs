@@ -5,7 +5,6 @@ module Main where
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import Data.Time.Clock (getCurrentTime, utctDay)
-import System.IO
 import Text.Read (read)
 import TextShow (showt, printT)
 
