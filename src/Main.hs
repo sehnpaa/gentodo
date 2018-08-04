@@ -8,6 +8,7 @@ import Data.Time.Clock (getCurrentTime, utctDay)
 import Text.Read (read)
 import TextShow (showt, printT)
 
+import Config (ambitionsFilename, logFilename, todoFilename)
 import Parse (parseErrorToText, process)
 import Types
 
@@ -23,15 +24,6 @@ import Types
 -- todo.txt
 ---- Entries can be modified manually by the user (via a text editor)
 ---- New entries will be appended to this file by the application
-
-ambitionsFilename :: String
-ambitionsFilename = "ambitions.txt"
-
-logFilename :: String
-logFilename = "log.txt"
-
-todoFilename :: String
-todoFilename = "todo.txt"
 
 -- Get content from the ambition file and log file together
 -- with the current date. Apply process to this data and 
