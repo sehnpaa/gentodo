@@ -1,2 +1,0 @@
-1;Do the dishes
-2;Vacuum
