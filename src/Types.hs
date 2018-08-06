@@ -22,3 +22,8 @@ type Output = T.Text
 type Todo = T.Text
 
 type Date = Cal.Day
+
+data Options = Options
+  { command :: Command }
+
+data Command = Version

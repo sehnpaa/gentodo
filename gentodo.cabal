@@ -18,10 +18,12 @@ cabal-version:       >=1.10
 executable gentodo
   main-is:             Main.hs
   other-modules:       Config
+                       Options
                        Parse
                        Types
   -- other-extensions:    
   build-depends:       base >=4.9 && <4.12
+                     , optparse-applicative
                      , parsec
                      , QuickCheck
                      , safe

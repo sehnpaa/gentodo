@@ -4,8 +4,8 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, parsec, QuickCheck, safe, stdenv, text
-      , text-show, time
+  f = { mkDerivation, base, optparse-applicative, parsec
+      , QuickCheck, safe, stdenv, text, text-show, time
       }:
       mkDerivation {
         pname = "gentodo";
@@ -14,7 +14,8 @@ let
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
-          base parsec QuickCheck safe text text-show time
+          base optparse-applicative parsec QuickCheck safe text text-show
+          time
         ];
         license = stdenv.lib.licenses.bsd3;
       };

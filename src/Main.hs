@@ -9,6 +9,7 @@ import Text.Read (read)
 import TextShow (showt, printT)
 
 import Config (ambitionsFilename, logFilename, todoFilename)
+import Options (execParser, opts)
 import Parse (parseErrorToText, process)
 import Types
 
@@ -25,13 +26,16 @@ import Types
 ---- Entries can be modified manually by the user (via a text editor)
 ---- New entries will be appended to this file by the application
 
+main :: IO ()
+main = runWithOptions =<< execParser opts
+
 -- Get content from the ambition file and log file together
 -- with the current date. Apply process to this data and 
 -- either print the error or write to both the log file
 -- and the todo file.
 
-main :: IO ()
-main = do
+runWithOptions :: Options -> IO ()
+runWithOptions _ = do
     ambitionsContent <- TIO.readFile ambitionsFilename
     logContent <- TIO.readFile logFilename
     currentDate <- getDate
@@ -40,7 +44,7 @@ main = do
         writeToLogFile $ map formatLogEntry $ getLogEntries currentDate res
         writeToTodoFile $ getTodos res)
         $ process currentDate logContent ambitionsContent
- 
+
     return ()
 
 writeToLogFile :: [T.Text] -> IO ()
