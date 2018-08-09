@@ -5,11 +5,13 @@ module Main where
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import Data.Time.Clock (getCurrentTime, utctDay)
+import Options.Applicative
+import System.Environment (getArgs)
 import Text.Read (read)
 import TextShow (showt, printT)
 
 import Config (ambitionsFilename, logFilename, todoFilename)
-import Options (execParser, opts)
+import Options (handleOptions, parseOptions)
 import Parse (parseErrorToText, process)
 import Types
 
@@ -27,7 +29,10 @@ import Types
 ---- New entries will be appended to this file by the application
 
 main :: IO ()
-main = runWithOptions =<< execParser opts
+main = do
+    args <- getArgs
+    options <- handleOptions $ parseOptions args
+    runWithOptions options
 
 -- Get content from the ambition file and log file together
 -- with the current date. Apply process to this data and 
