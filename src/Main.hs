@@ -8,7 +8,6 @@ import Data.Time.Clock (getCurrentTime, utctDay)
 import Options.Applicative
 import System.Environment (getArgs)
 import Text.Read (read)
-import TextShow (showt, printT)
 
 import Config (ambitionsFilename, logFilename, todoFilename)
 import Options (handleOptions, parseOptions)
@@ -45,7 +44,7 @@ runWithOptions _ = do
     logContent <- TIO.readFile logFilename
     currentDate <- getDate
 
-    either (printT . parseErrorToText) (\res -> do
+    either (print . parseErrorToText) (\res -> do
         writeToLogFile $ map formatLogEntry $ getLogEntries currentDate res
         writeToTodoFile $ getTodos res)
         $ process currentDate logContent ambitionsContent
@@ -61,14 +60,14 @@ printToCLI = TIO.putStrLn
 
 getWriteToLogMessage :: T.Text -> T.Text
 -- showt will include newline character
-getWriteToLogMessage s = T.concat ["Writing ", showt s, " to log file"]
+getWriteToLogMessage s = T.concat ["Writing ", s, " to log file"]
 
 writeToTodoFile :: [T.Text] -> IO ()
 writeToTodoFile =
     mapM_ (\line -> TIO.appendFile todoFilename line >> printToCLI (getWriteToTodoMessage line))
 
 getWriteToTodoMessage :: T.Text -> T.Text
-getWriteToTodoMessage s = T.concat ["Writing ", showt s, " to todo file"]
+getWriteToTodoMessage s = T.concat ["Writing ", s, " to todo file"]
 
 formatLogEntry :: LogEntry -> T.Text
 formatLogEntry (LogEntry date desc) =

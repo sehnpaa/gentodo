@@ -14,7 +14,7 @@ let
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
-          base optparse-applicative parsec QuickCheck safe text text-show
+          base optparse-applicative parsec QuickCheck safe text
           time
         ];
         license = stdenv.lib.licenses.bsd3;
