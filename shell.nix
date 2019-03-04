@@ -4,8 +4,8 @@ let
 
   inherit (nixpkgs) pkgs;
 
-  f = { mkDerivation, base, optparse-applicative, parsec
-      , QuickCheck, safe, stdenv, text, text-show, time
+  f = { mkDerivation, base, dhall, optparse-applicative, parsec
+      , QuickCheck, safe, stdenv, text, time
       }:
       mkDerivation {
         pname = "gentodo";
@@ -14,8 +14,7 @@ let
         isLibrary = false;
         isExecutable = true;
         executableHaskellDepends = [
-          base optparse-applicative parsec QuickCheck safe text
-          time
+          base dhall optparse-applicative parsec QuickCheck safe text time
         ];
         license = stdenv.lib.licenses.bsd3;
       };
@@ -24,7 +23,9 @@ let
                        then pkgs.haskellPackages
                        else pkgs.haskell.packages.${compiler};
 
-  drv = haskellPackages.callPackage f {};
+  variant = if doBenchmark then pkgs.haskell.lib.doBenchmark else pkgs.lib.id;
+
+  drv = variant (haskellPackages.callPackage f {});
 
 in
 

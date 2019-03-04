@@ -23,6 +23,7 @@ executable gentodo
                        Types
   -- other-extensions:    
   build-depends:       base >=4.9 && <4.12
+                     , dhall
                      , optparse-applicative
                      , parsec
                      , QuickCheck
