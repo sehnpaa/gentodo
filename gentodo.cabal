@@ -22,7 +22,7 @@ executable gentodo
                        Parse
                        Types
   -- other-extensions:    
-  build-depends:       base >=4.9 && <4.12
+  build-depends:       base >=4.9 && <5
                      , dhall
                      , optparse-applicative
                      , parsec
