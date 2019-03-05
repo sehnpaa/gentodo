@@ -1,10 +1,15 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Config where
 
-ambitionsFilename :: String
-ambitionsFilename = "ambitions.txt"
+import Dhall
 
-logFilename :: String
-logFilename = "log.txt"
+data Config = Config
+  { ambitionsPath :: String
+  , logPath :: String
+  , todoPath :: String } deriving (Generic, Show)
 
-todoFilename :: String
-todoFilename = "todo.txt"
+instance Interpret Config
+
+loadConfig :: Text -> IO Config
+loadConfig = input auto

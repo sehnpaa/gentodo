@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
@@ -9,7 +10,7 @@ import Options.Applicative
 import System.Environment (getArgs)
 import Text.Read (read)
 
-import Config (ambitionsFilename, logFilename, todoFilename)
+import Config (ambitionsPath, loadConfig, logPath, todoPath)
 import Options (handleOptions, parseOptions)
 import Parse (parseErrorToText, process)
 import Types
@@ -38,22 +39,25 @@ main = do
 -- either print the error or write to both the log file
 -- and the todo file.
 
+configPath = "./config.dhall"
+
 runWithOptions :: Options -> IO ()
 runWithOptions _ = do
-    ambitionsContent <- TIO.readFile ambitionsFilename
-    logContent <- TIO.readFile logFilename
+    config <- loadConfig configPath
+    ambitionsContent <- TIO.readFile $ ambitionsPath config
+    logContent <- TIO.readFile $ logPath config
     currentDate <- getDate
 
     either (print . parseErrorToText) (\res -> do
-        writeToLogFile $ map formatLogEntry $ getLogEntries currentDate res
-        writeToTodoFile $ getTodos res)
-        $ process currentDate logContent ambitionsContent
+        writeToLogFile (logPath config) $ map formatLogEntry $ getLogEntries currentDate res
+        writeToTodoFile (todoPath config) $ getTodos res)
+          $ process currentDate logContent ambitionsContent
 
     return ()
 
-writeToLogFile :: [T.Text] -> IO ()
-writeToLogFile =
-    mapM_ (\line -> TIO.appendFile logFilename line >> printToCLI (getWriteToLogMessage line))
+writeToLogFile :: String -> [T.Text] -> IO ()
+writeToLogFile logPath =
+    mapM_ (\line -> TIO.appendFile logPath line >> printToCLI (getWriteToLogMessage line))
 
 printToCLI :: T.Text -> IO ()
 printToCLI = TIO.putStrLn
@@ -62,9 +66,9 @@ getWriteToLogMessage :: T.Text -> T.Text
 -- showt will include newline character
 getWriteToLogMessage s = T.concat ["Writing ", s, " to log file"]
 
-writeToTodoFile :: [T.Text] -> IO ()
-writeToTodoFile =
-    mapM_ (\line -> TIO.appendFile todoFilename line >> printToCLI (getWriteToTodoMessage line))
+writeToTodoFile :: String -> [T.Text] -> IO ()
+writeToTodoFile todoPath =
+    mapM_ (\line -> TIO.appendFile todoPath line >> printToCLI (getWriteToTodoMessage line))
 
 getWriteToTodoMessage :: T.Text -> T.Text
 getWriteToTodoMessage s = T.concat ["Writing ", s, " to todo file"]
