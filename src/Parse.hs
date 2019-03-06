@@ -33,7 +33,7 @@ parseAmbition = do
     n <- P.satisfy isDigit
     void $ P.char ';'
     desc <- parseDescription
-    return $ Ambition (Frequency (read [n]) Day) desc
+    Ambition (Frequency (read [n]) Day) <$> parseDescription
 
 parseDescription :: PT.Parser T.Text
 parseDescription = do
@@ -50,8 +50,7 @@ parseLogEntry :: PT.Parser LogEntry
 parseLogEntry = do
     date <- parseDate
     void $ P.char ';'
-    desc <- parseDescription
-    return $ LogEntry date desc
+    LogEntry date <$> parseDescription
 
 parseDate :: PT.Parser Date
 parseDate = do
@@ -60,7 +59,8 @@ parseDate = do
     month <- parseNumber
     void $ P.char '-'
     day <- parseNumber
-    return $ fromGregorian (read year) (read month) (read day)
+    fromGregorian (read year) (read month) . read <$> parseNumber
+
 
 parseNumber :: PT.Parser String
 parseNumber = P.many P.digit
