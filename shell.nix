@@ -5,17 +5,19 @@ let
   inherit (nixpkgs) pkgs;
 
   f = { mkDerivation, base, dhall, optparse-applicative, parsec
-      , QuickCheck, safe, stdenv, text, time
+      , safe, stdenv, tasty, tasty-hunit, tasty-quickcheck, text, time
       }:
       mkDerivation {
         pname = "gentodo";
         version = "0.1.0.0";
         src = ./.;
-        isLibrary = false;
+        isLibrary = true;
         isExecutable = true;
-        executableHaskellDepends = [
-          base dhall optparse-applicative parsec QuickCheck safe text time
+        libraryHaskellDepends = [
+          base dhall optparse-applicative parsec safe text time
         ];
+        executableHaskellDepends = [ base text time ];
+        testHaskellDepends = [ base tasty tasty-hunit tasty-quickcheck ];
         license = stdenv.lib.licenses.bsd3;
       };
 
