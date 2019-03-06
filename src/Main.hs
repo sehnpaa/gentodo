@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
@@ -10,7 +9,7 @@ import Options.Applicative
 import System.Environment (getArgs)
 import Text.Read (read)
 
-import Config (ambitionsPath, loadConfig, logPath, todoPath)
+import Config (Config, ambitionsPath, loadConfig, logPath, todoPath)
 import Options (handleOptions, parseOptions)
 import Parse (parseErrorToText, process)
 import Types
@@ -48,12 +47,18 @@ runWithOptions _ = do
     logContent <- TIO.readFile $ logPath config
     currentDate <- getDate
 
-    either (print . parseErrorToText) (\res -> do
-        writeToLogFile (logPath config) $ map formatLogEntry $ getLogEntries currentDate res
-        writeToTodoFile (todoPath config) $ getTodos res)
-          $ process currentDate logContent ambitionsContent
+    either (print . parseErrorToText) (writeToFiles currentDate config)
+        (process currentDate logContent ambitionsContent)
 
     return ()
+
+writeToFiles :: Date -> Config -> [Output] -> IO ()
+writeToFiles date config res = do
+        writeToLogFile (logPath config) $ getFormatedEntries date res
+        writeToTodoFile (todoPath config) $ getTodos res
+
+getFormatedEntries :: Date -> [Output] -> [T.Text]
+getFormatedEntries currentDate = map formatLogEntry . getLogEntries currentDate
 
 writeToLogFile :: String -> [T.Text] -> IO ()
 writeToLogFile logPath =
