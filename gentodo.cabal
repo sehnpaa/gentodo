@@ -17,6 +17,7 @@ cabal-version:       >=1.10
 
 library
   exposed-modules:     Config
+                       Lib
                        Options
                        Parse
                        Types

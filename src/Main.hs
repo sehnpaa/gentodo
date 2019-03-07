@@ -6,9 +6,13 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import Data.Time.Clock (getCurrentTime, utctDay)
 import System.Environment (getArgs)
-import Text.Read (read)
 
 import Config (Config, ambitionsPath, loadConfig, logPath, todoPath)
+import Lib
+  ( getFormatedEntries
+  , getTodos
+  , getWriteToLogMessage
+  , getWriteToTodoMessage )
 import Options (handleOptions, parseOptions)
 import Parse (parseErrorToText, process)
 import Types
@@ -56,9 +60,6 @@ writeToFiles date config res = do
         writeToLogFile (logPath config) $ getFormatedEntries date res
         writeToTodoFile (todoPath config) $ getTodos res
 
-getFormatedEntries :: Date -> [Output] -> [T.Text]
-getFormatedEntries currentDate = map formatLogEntry . getLogEntries currentDate
-
 writeToLogFile :: String -> [T.Text] -> IO ()
 writeToLogFile logPath =
     mapM_ (\line -> TIO.appendFile logPath line >> printToCLI (getWriteToLogMessage line))
@@ -66,32 +67,9 @@ writeToLogFile logPath =
 printToCLI :: T.Text -> IO ()
 printToCLI = TIO.putStrLn
 
-getWriteToLogMessage :: T.Text -> T.Text
--- showt will include newline character
-getWriteToLogMessage s = T.concat ["Writing ", s, " to log file"]
-
 writeToTodoFile :: String -> [T.Text] -> IO ()
 writeToTodoFile todoPath =
     mapM_ (\line -> TIO.appendFile todoPath line >> printToCLI (getWriteToTodoMessage line))
 
-getWriteToTodoMessage :: T.Text -> T.Text
-getWriteToTodoMessage s = T.concat ["Writing ", s, " to todo file"]
-
-formatLogEntry :: LogEntry -> T.Text
-formatLogEntry (LogEntry date desc) =
-    T.concat [showDate date, ";", desc, "\n"]
-
 getDate :: IO Date
 getDate = fmap utctDay getCurrentTime
-
-getLogEntries :: Date -> [Output] -> [LogEntry]
-getLogEntries currentDate = map (toLog currentDate)
-
-toLog :: Date -> Output -> LogEntry
-toLog = LogEntry
-
-showDate :: Date -> T.Text
-showDate day = T.pack $ show day
-
-getTodos :: [Output] -> [Todo]
-getTodos = map (T.append "\n")
