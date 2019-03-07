@@ -7,7 +7,8 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 import Lib
-  (getFormatedEntries)
+  ( getFormatedEntries
+  , getTodos )
 
 main :: IO ()
 main = defaultMain tests
@@ -20,7 +21,16 @@ date20190307 = ModifiedJulianDay 58549
 
 unitTests :: TestTree
 unitTests = testGroup "Unit tests"
-  [ testCase "blah" $
-    let actual = getFormatedEntries date20190307 ["activity1", "activity2"]
-        expected = ["2019-03-07;activity1\n", "2019-03-07;activity2\n"]
-    in actual @?= expected ]
+  [ testCase "getFormatedEntries" $
+      let actual = getFormatedEntries date20190307 ["activity1", "activity2"]
+          expected = ["2019-03-07;activity1\n", "2019-03-07;activity2\n"]
+      in actual @?= expected
+  , testCase "getTodos - do nothing" $
+      let actual = getTodos []
+          expected = []
+      in actual @?= expected
+  , testCase "getTodos" $
+      let actual = getTodos ["foo", "bar"]
+          expected = ["\nfoo", "\nbar"]
+      in actual @?= expected
+  ]
