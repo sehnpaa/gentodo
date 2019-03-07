@@ -27,7 +27,7 @@ toLog :: Date -> Output -> LogEntry
 toLog = LogEntry
 
 showDate :: Date -> T.Text
-showDate day = T.pack $ show day
+showDate = T.pack . show
 
 getTodos :: [Output] -> [Todo]
 getTodos = map (T.append "\n")

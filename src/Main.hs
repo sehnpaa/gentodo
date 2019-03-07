@@ -58,8 +58,8 @@ runWithOptions _ = do
 
 writeToFiles :: Date -> Config -> [Output] -> IO ()
 writeToFiles date config res = do
-        writeToLogFile (logPath config) $ getFormatedEntries date res
-        writeToTodoFile (todoPath config) $ getTodos res
+    writeToLogFile (logPath config) $ getFormatedEntries date res
+    writeToTodoFile (todoPath config) $ getTodos res
 
 writeToLogFile :: String -> [T.Text] -> IO ()
 writeToLogFile logPath' =

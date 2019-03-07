@@ -16,7 +16,7 @@ let
         libraryHaskellDepends = [
           base dhall optparse-applicative parsec safe text time
         ];
-        executableHaskellDepends = [ base text time ];
+        executableHaskellDepends = [ base tasty text time ];
         testHaskellDepends = [ base tasty tasty-hunit tasty-quickcheck ];
         license = stdenv.lib.licenses.bsd3;
       };

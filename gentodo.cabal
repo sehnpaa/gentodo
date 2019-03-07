@@ -29,6 +29,8 @@ library
                      , optparse-applicative
                      , parsec
                      , safe
+                     , tasty
+                     , tasty-hunit
                      , text
                      , time
 
@@ -38,6 +40,8 @@ executable gentodo
   -- other-extensions:
   build-depends:       base >=4.9 && <5
                      , gentodo
+                     , tasty
+                     , tasty-hunit
                      , text
                      , time
   hs-source-dirs:      src
@@ -47,12 +51,13 @@ executable gentodo
 test-suite test
   type:                 exitcode-stdio-1.0
   main-is:              Test.hs
-  hs-source-dirs:       lib
-                      , tests
+  hs-source-dirs:       tests
   default-language:     Haskell2010
   ghc-options:          -Wall
   build-depends:        base
+                      , gentodo
                       , tasty
                       , tasty-hunit
                       , tasty-quickcheck
+                      , time
   other-modules:
