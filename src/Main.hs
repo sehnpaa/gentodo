@@ -41,6 +41,7 @@ main = do
 -- either print the error or write to both the log file
 -- and the todo file.
 
+configPath :: T.Text
 configPath = "./config.dhall"
 
 runWithOptions :: Options -> IO ()
@@ -61,15 +62,15 @@ writeToFiles date config res = do
         writeToTodoFile (todoPath config) $ getTodos res
 
 writeToLogFile :: String -> [T.Text] -> IO ()
-writeToLogFile logPath =
-    mapM_ (\line -> TIO.appendFile logPath line >> printToCLI (getWriteToLogMessage line))
+writeToLogFile logPath' =
+    mapM_ (\line -> TIO.appendFile logPath' line >> printToCLI (getWriteToLogMessage line))
 
 printToCLI :: T.Text -> IO ()
 printToCLI = TIO.putStrLn
 
 writeToTodoFile :: String -> [T.Text] -> IO ()
-writeToTodoFile todoPath =
-    mapM_ (\line -> TIO.appendFile todoPath line >> printToCLI (getWriteToTodoMessage line))
+writeToTodoFile todoPath' =
+    mapM_ (\line -> TIO.appendFile todoPath' line >> printToCLI (getWriteToTodoMessage line))
 
 getDate :: IO Date
 getDate = fmap utctDay getCurrentTime

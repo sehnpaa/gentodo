@@ -1,7 +1,5 @@
 module Options (parseOptions, handleOptions) where
 
-import Control.Applicative ((<$>))
-import Control.Monad (replicateM_)
 import Data.Semigroup ((<>))
 import Options.Applicative
 
